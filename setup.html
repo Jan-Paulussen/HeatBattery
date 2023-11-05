@@ -1,0 +1,24 @@
+
+<H1>How to Setup your raspberry for the HeatBatt;</H1>
+
+
+1. Start by installing Raspbian on your Raspberry Pi USB-key, SD-card or EMMC. 
+This is the official operating system recommended by the Raspberry Pi Foundation. 
+The program to use best is probably Imager. 
+Click the little setup icon to go into the options before you write the image:<br>
+- to <b>enable SSH</b> if needed<br>
+- to change the <b>hostname</b><br>
+- to setup the <b>Wifi SSID and password</b><br> <br>
+<br>
+2. Install Apache2. You can do this by running the following command in the terminal: <b>sudo apt-get install apache2</b><br>
+<br>
+3. You will need to install MariaDB. You can do this by running the following command in the terminal: <b>sudo apt-get install mariadb-server php-mysql -y</b><br>
+<br>
+4. Once MariaDB is installed, you will need to configure it by running the following command: <b>sudo mysql_secure_installation.</b> <br> &nbsp &nbsp The default username = root <br>&nbsp &nbsp The default password for the database = raspberry<br>
+<br>
+5. You will then need to install PHP. You can do this by running the following command in the terminal: <b>sudo apt-get install php -y</b><br>
+<br>
+6. Finally, restart Apache2: <b>sudo service apache2 restart</b><br>
+<br>
+7. Install the MQTT library: <b>pip install paho-mqtt</b><br>
+

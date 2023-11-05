@@ -1,0 +1,91 @@
+<p style="font-size:30px"><b>Structure, I/O assignement & Bugs:</b></p>
+   <b>LAMP-server</b><br>
+    --<i>index.html</i>  (Main page, with links to the other pages)<br>
+&nbsp &nbsp &nbsp <i>Subpages</i> from the menu<br><br>
+   <b>MQTT-client</b><br>
+    --<i></i> Is separate packet must be installed (e.g. with pip, MQTT-server en MQTT-clients installing)<br><br>
+
+<i><b>--slow.py</b></i><b> - in crontab</b><br>
+ Records values, every minute, in the SQL table Battery_log (Not programmed yet!)<br>
+<br>
+
+
+
+<p style="font-size:25px"><b><u>Python controls:</b></u></p>
+<i><b>--main.py</b></i> : Should NOT be run as root. (Just '<i>python main.py'</i><br>
+Program that first loads all python scrips, and runs the initial ones once.<br>
+Then it start a loop for all recursive modules.<br>
+They controls physical GPIO, the triacs/optocouplers for the resistorbanks only (at fast speed!), <br>
+It only reads the status for the 3 resistors from the database, and sets them accordingly on/off or at a percentage.
+(:HeatResistor1/2/C)<br>
+It therefore does not matter if the system is manual or not, only the values written in the database for each output matter<br>
+It does control the fan (the fan is controlled in the slower control-program<br>
+<b> in the <del>sudo</del> crontab!</b><br><br>
+
+<p style="font-size:25px"><b><u>Subroutines from main:</b></u></p>
+    --<i><b>fan.py</b></i> Program that controles the fan, so reads the database and sets GPIO pin accordingly <br><br>
+
+    --<i><b>afterheating.py</b></i> Program that controles the afterheating (no accumulation), so reads the database and sets GPIO pin accordingly <br><br>
+
+    --<i><b>batterytemperature.py</b></i> Program that reads the temperature inside the battery (PT100) and writes it in the database <br><br>
+
+    --<i><b>mqtt.py</b></i> Program thats is triggered every time a message from the smart meter is received<br>
+    |-- This is initiated in the main.py program, but on called on a message as an interupt <br><br>
+
+    --<i><b>percentage_to_control.py</b></i> Program that calculates from total percentage to individual powers, and writes this in  the database <br><br>
+
+    --<i><b><del>bank.py</del></b></i> Program that sets GPIO to individual resistorbanks, written in python, replaced by program below <br>
+
+    --<i><b>bankc.py</b></i> Old Python program that sets GPIO to individual resistorbanks by calling the C-program dytycycle every second <br>
+   |--<i><b> dutycycle</b></i> C-program that sets GPIO to individual resistorbanks, called by the Python program bankc.py every second it has 3 command line arguments: percentage for each bank for the dutycycle<br>
+   || The dutycycle program (both the source and the compiled program) is in the directory ./home/pi, so not in the webserver directory!
+   ||-- to be compiled with the additional library like so: <i><b>gcc -o dutycycle dutycycle.c  -lwiringPi</b></i><br><br>
+
+
+
+
+
+    --<i><b>mqtt.py</b></i> mqtt.py will interrups and calculate new percentage when message is received from smart meter (in auto) <br><br>
+
+
+
+--<i><b>banktest.py</b></i>
+Program that tests the power a resistor bank is using.<br>
+It's done by switching on and off the bank and read the difference from the smart metering.<br>
+By doing this a number of times, a reasonable measurement is achieved (but it is somewhat depending on the temperature of the bank/resistor)<br>
+It should NOT go in the crontab, but only be run from the command line at startup, to establish the constants.
+<br><br>
+
+ <b>Crontab: </b>to start below programs at boot (and with some delays)<br>
+                   ---main.py        Script that reads the initialisation and then does the cyclec program <br>
+                   ---slow.py still to be written: Does slow control / Records all values every minute, for graphs and calculations (not programmed yet)<br>
+<br><br>
+//Here blow the IO pin assignement of the hardware-----------------------------------------------------------------------------------------------------------------------------------------------
+<br><br>
+<strong>I/O definition</strong><br>
+GPIO20 (pin38) = Zero detection input wPi=26 (for C-programmaing)<br>
+<br>
+GPIO21 (pin 40)= Resistorbank1 <font color="red">(Red) </font> wPi=29<br>
+GPIO12 (pin32) = Resistorbank2 <font color="red">(Red) </font> wPi=26<br>
+GPIO16 (pin36) = Resistorbank3 <font color="red">(Red) </font> wPi=27<br>
+GPIO26 (pin37) = Fan <font color="brown">(yellow) </font><br>
+GPIO19 (pin35) = after heating <font color="blue">(Blue) </font><br>
+Power Led  = <font color="green">(Green) </font><br>
+
+
+
+<br><br>
+<strong>Todo/Bugs:</strong><br>
+- Berekenen en sturen weerstanden batterij<br>
+- Gaat bij volledige overschot niet verder dan 'on/on/30%'?!<br>
+- Zelfs bij stroomtekort gaat rode led nog lichtjes knipperen<br>
+- Setup tables in database in logging?<br>
+- inbouwen en inlezen PT100 DONE! <br>
+- BACKUPS!!!(HeatBattery)
+
+<br><br>
+<!-- Link to main page -->
+<form action="index.html">
+    <input type="submit" value="Go to Main page" />
+</form>
+

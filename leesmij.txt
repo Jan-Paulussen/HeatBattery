@@ -1,0 +1,14 @@
+Deze file geeft uitleg over de status van de ontwikkeling van de software:
+
+op 29okt2023 was het C-programma dutycycle af en werkte met drie arguments in de command line. 
+Deze zijn bedoeld om de 3 uitgangen naar de weerstandbanken van ed heating ook per die argumenten aan te sturen: een percentage van de 10ms van een halve sinus.
+100% betekend volledig aan, 
+50% betekend de helft van de cuclus aangestuurd. En nul betekend nooit.
+
+De python module 'bank.py' is nu (tijdelijk?) uitgeshcakeld (comment) zodat er kan getest worden met het C-programma.
+Dit c-programma dutycycle moet dus nog in de python module worden ingebed (elke seconde opnieuw oproepen met uitgerekende waardes).
+
+
+De meeste files zitten in de html directory, behalve de c-programma source code en compiled code: die zitten onder de home\pi directory.
+
+
